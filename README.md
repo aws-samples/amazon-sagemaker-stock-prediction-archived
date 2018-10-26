@@ -43,7 +43,11 @@ As of re:Invent-2018, SageMaker is available in the following regions:
 
 
 ### 1.1. Lifecycle configuration
-1.  Lifecycle configurations are small bootup scripts, that you can use to automate certain tasks when a Notebook instance in being created and/or being started. For this workshop, create a startup script to download pre-built notebooks from this Github repository onto your notebook instance. Configure this script to run on `Create notebook`.
+1.  Lifecycle configurations are small bootup scripts, that you can use to automate certain tasks when a Notebook instance in being created and/or being started. For this workshop, create a startup script to download pre-built notebooks from this Github repository onto your notebook instance. 
+
+<details>
+<summary><strong>Create configuration (expand for details)</strong></summary><p>
+Configure this script to run on `Create notebook`.
     ```
     #!/bin/bash
     set -e
@@ -57,13 +61,16 @@ As of re:Invent-2018, SageMaker is available in the following regions:
     sudo yum install -y docker
     ```
 
-1. Also create a  startup script as follows, and configure it to run on `Start Notebook`.
+Also create a  startup script as follows, and configure it to run on `Start Notebook`.
 
     ```
     #!/bin/bash
     set -e
     sudo service docker start
     ```
+
+</p></details>
+    
 ### 1.2. Notebook instance
 1. Use the lifecycle configuration to create Notebook instance in a region of your choice.
 1. Choose a moderatly sized memory optimized instance class, such as `ml.m4.xlarge`
