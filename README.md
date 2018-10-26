@@ -1,6 +1,6 @@
 # Stock Prediction using Neural Networks on Amazon SageMaker
 
-##Introduction
+## Introduction
 
 This is a sample workshop that demonstrates how to use neural networks based algorithm for time series prediction. The workshop uses stock market data maintained by Deutsche Börse under [Registry of open data](https://registry.opendata.aws/deutsche-boerse-pds/) on AWS. This dataset continaes minute by minute stock movement data from EU market, containing 100+ securities, tracked since July, 2016.
 
@@ -10,11 +10,11 @@ Time series data can be analysed using a variety of techniques, ranging from a s
 
 This sample code is made available under a modified MIT license. See the LICENSE file.
 
-##Action Plan
+## Action Plan
 
 [Amazon SageMaker](https://aws.amazon.com/sagemaker/), is the Machine Learning platform on AWS that provides infrastructure to run hosted Jupyetr Notebooks. Being integrated with other storage and analytics services on AWS, data collection, preparation and visualization, all essential tasks for a successful Machine Learning project becomes more secured and streamlined on SageMaker. 
 
-![SageMaker](images/sagemaker.png)
+    ![SageMaker](images/sagemaker.png)
 
 In this workshop, we'll use SageMaker hosted notebooks to fetch the data from Deutsche Börse dataset, clean up and aggregate the data on [Amazon S3](https://aws.amazon.com/s3/) buckets. We'll also use [Amazon Athena](https://aws.amazon.com/athena/) to query the data and [Amazon QuickSight](https://aws.amazon.com/quicksight/) to visuaize the data. This will allows us to develop an intuition about the nature of the data.
 
@@ -22,7 +22,7 @@ In addition to hosted Notebooks, SageMaker also provdes managed training and hos
 
 SageMaker also provides several built in algorithms, for image classification, regression and clustering of structured data, timeseries processing and natural language processing. In the later part of this workshop we'll use [DeepAR](https://docs.aws.amazon.com/sagemaker/latest/dg/deepar.html), which is a supervised learning algorithm for forecasting one-dimensional time series using RNN.
 
-##Disclaimer
+## Disclaimer
 
 This workshop is not an exercise in statistical methods, neither does it attempt to build a viable stock prediction model that you can use to make money. However it does showcase the techniques that you can use on AWS Machine Learning platform
 
