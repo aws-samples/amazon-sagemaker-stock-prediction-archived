@@ -48,6 +48,7 @@ As of re:Invent-2018, SageMaker is available in the following regions:
 <details>
 <summary><strong>Create configuration (expand for details)</strong></summary><p>
 Configure this script to run on `Create notebook`.
+
     ```
     #!/bin/bash
     set -e
@@ -70,7 +71,7 @@ Also create a  startup script as follows, and configure it to run on `Start Note
     ```
 
 </p></details>
-    
+
 ### 1.2. Notebook instance
 1. Use the lifecycle configuration to create Notebook instance in a region of your choice.
 1. Choose a moderatly sized memory optimized instance class, such as `ml.m4.xlarge`
@@ -79,6 +80,8 @@ Also create a  startup script as follows, and configure it to run on `Start Note
 
 ### 1.3. Athena Table
 Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDL to create external table in athena, that will create schema and then allow queries to be rub directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
+<details>
+<summary><strong>Create table (expand for details)</strong></summary><p>
 
     ```
     CREATE EXTERNAL TABLE `xetra`(
@@ -112,6 +115,8 @@ Athena allows you to query data directly from S3 buckets, using standard SQL com
     'classification'='csv', 
     'transient_lastDdlTime'='1540333010')
     ```
+    
+</p></details>
 
 ## 2. Data preparation
 
