@@ -202,7 +202,7 @@ Moreover, the source dataset is organized into hierarchical S3 bucket prefixes, 
 
 Within this notebook, you'll also find code to that you could use to grab the cleaned data directly from an S3 bucket maintained for this workshop. This alternative will save you time in that you do not have to execute code to grab data from source and cleanse yourself. In order to use this option of obtaining data, execute the cells in the notebook from section **2.5** onward.
 
-Whichever way you choose, proceed to obtain the data by executing code in dbg-dataprep](notebooks/dbg-dataprep.ipynb) from your SageMaker Notebook instance, and come to the next section of this readme when finished.
+Whichever way you choose, proceed to obtain the data by executing code in [dbg-dataprep](notebooks/dbg-dataprep.ipynb) from your SageMaker Notebook instance, and come to the next section of this readme when finished.
 
 ## 3. Data Visualization
 
