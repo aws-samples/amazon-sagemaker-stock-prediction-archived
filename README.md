@@ -56,6 +56,7 @@ Configure this script to run on `Create notebook`.
     mkdir SageMaker/fsv309-workshop
     mv amazon-sagemaker-stock-prediction/container SageMaker/fsv309-workshop/container/
     mv amazon-sagemaker-stock-prediction/notebooks SageMaker/fsv309-workshop/notebooks/
+    mv amazon-sagemaker-stock-prediction/images SageMaker/fsv309-workshop/images/
     mv amazon-sagemaker-stock-prediction/pretrained-model SageMaker/fsv309-workshop/pretrained-model/
     rm -rf amazon-sagemaker-stock-prediction
     sudo chmod -R ugo+w SageMaker/fsv309-workshop/
@@ -79,45 +80,119 @@ Also create a  startup script as follows, and configure it to run on `Start Note
 1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose fo the workshop you can proceed without these mechanisms to protect the notebook.
 
 ### 1.3. Athena Table
-Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDL to create external table in athena, that will create schema and then allow queries to be rub directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
+Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDLs to create external table in Athena, and a view containing the fields of interest. This allow you to run queries directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
+
+Use the DDL provided below to create an Athena table, which currently wouldn't display any data, but you'll be able to run queries and generate QuickSight dashboard against this table once the following data preparation stage is completed.
+
 <details>
 <summary><strong>Create table (expand for details)</strong></summary><p>
 
-    ```
-    CREATE EXTERNAL TABLE `xetra`(
-    `isin` string COMMENT 'from deserializer', 
-    `mnemonic` string COMMENT 'from deserializer', 
-    `securitydesc` string COMMENT 'from deserializer', 
-    `securitytype` string COMMENT 'from deserializer', 
-    `currency` string COMMENT 'from deserializer', 
-    `securityid` string COMMENT 'from deserializer', 
-    `date` string COMMENT 'from deserializer', 
-    `time` string COMMENT 'from deserializer', 
-    `startprice` string COMMENT 'from deserializer', 
-    `maxprice` string COMMENT 'from deserializer', 
-    `minprice` string COMMENT 'from deserializer', 
-    `endprice` string COMMENT 'from deserializer', 
-    `tradedvolume` string COMMENT 'from deserializer', 
-    `numberoftrades` string COMMENT 'from deserializer')
+1. DDL to create hourly stock data table.
+
+    ```      
+    CREATE EXTERNAL TABLE `stockdata_hourly` (
+      `CalcDateTime` string, 
+      `Mnemonic` string, 
+      `MinPrice` float, 
+      `MaxPrice` float, 
+      `StartPrice` float, 
+      `EndPrice` float, 
+      `TradedVolume` float, 
+      `NumberOfTrades` float)
     ROW FORMAT SERDE 
-    'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
+      'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
     WITH SERDEPROPERTIES ( 
-    'quoteChar'='\"', 
-    'separatorChar'=',', 
-    'skip.header.line.count'='1') 
+      'separatorChar'=',',
+      'quoteChar'='"',
+      'skip.header.line.count'='1') 
     STORED AS INPUTFORMAT 
-    'org.apache.hadoop.mapred.TextInputFormat' 
+      'org.apache.hadoop.mapred.TextInputFormat' 
     OUTPUTFORMAT 
-    'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+      'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
     LOCATION
-    's3://deutsche-boerse-xetra-pds/'
+      's3://<Your S3 Bucket Name>/dbg-stockdata/source/H/'
     TBLPROPERTIES (
-    'classification'='csv', 
-    'transient_lastDdlTime'='1540333010')
+      'classification'='csv')
+    ```
+    
+1. Since the table infers all date columns as strings and number columns as decimals, use the following DDL to create an hourly view, casting the columns to appropriate data types.    
+
+    ```      
+    CREATE OR REPLACE VIEW "stockdata_hourly_view" AS
+    SELECT date_parse(stock.calcdatetime, '%Y-%m-%d %H:%i:%s') AS CalcDateTime,
+            stock.Mnemonic as Mnemonic,
+            stock.MinPrice as MinPrice,
+            stock.MaxPrice as MaxPrice,
+            stock.StartPrice as StartPrice,
+            stock.EndPrice as EndPrice,
+            cast(stock.TradedVolume as integer) as TradedVolume,
+            cast(stock.NumberOfTrades as integer) as NumberOfTrades
+    FROM stockdata_hourly AS stock
+    ```
+
+1. DDL to create daily stock data table.
+
+    ```      
+    CREATE EXTERNAL TABLE `stockdata_daily` (
+      `CalcDateTime` string, 
+      `Mnemonic` string, 
+      `MinPrice` float, 
+      `MaxPrice` float, 
+      `StartPrice` float, 
+      `EndPrice` float, 
+      `TradedVolume` float, 
+      `NumberOfTrades` float)
+    ROW FORMAT SERDE 
+      'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
+    WITH SERDEPROPERTIES ( 
+      'separatorChar'=',',
+      'quoteChar'='"',
+      'skip.header.line.count'='1') 
+    STORED AS INPUTFORMAT 
+      'org.apache.hadoop.mapred.TextInputFormat' 
+    OUTPUTFORMAT 
+      'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+    LOCATION
+      's3://<Your S3 Bucket Name>/dbg-stockdata/source/D/'
+    TBLPROPERTIES (
+      'classification'='csv')
+    ```
+    
+1. Since the table infers all date columns as strings and number columns as decimals, use the following DDL to create a daily view, casting the columns to appropriate data types.    
+
+    ```      
+    CREATE OR REPLACE VIEW "stockdata_daily_view" AS
+    SELECT date_parse(stock.calcdatetime, '%Y-%m-%d') AS CalcDateTime,
+            stock.Mnemonic as Mnemonic,
+            stock.MinPrice as MinPrice,
+            stock.MaxPrice as MaxPrice,
+            stock.StartPrice as StartPrice,
+            stock.EndPrice as EndPrice,
+            cast(stock.TradedVolume as integer) as TradedVolume,
+            cast(stock.NumberOfTrades as integer) as NumberOfTrades
+    FROM stockdata_daily AS stock
+    ```
+
+</p></details>
+
+<details>
+<summary><strong>Create view (expand for details)</strong></summary><p>
+
+    ```
+    CREATE OR REPLACE VIEW "xetrawithts" AS
+    SELECT isin,
+            mnemonic,
+            startprice,
+            maxprice,
+            minprice,
+            endprice,
+            tradedvolume,
+            numberoftrades,
+            date_parse(xetra.date||xetra.time,'%Y-%m-%d%H:%i') AS calcdatetime
+    FROM xetra
     ```
     
 </p></details>
-
 ## 2. Data preparation
 
 Deutsche Börse Public Data Set consists of trade data aggregated one minute intervals. While such high fidelity data could provide an excellent insight and prove to be a valuable tool in quantitative finanical analysis, for the scope of this workshop data aggregated at a larger interval rate, such as daily and hourly would be more convenient to deal with.
