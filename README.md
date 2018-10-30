@@ -193,13 +193,14 @@ Use the DDL provided below to create an Athena table, which currently wouldn't d
     ```
     
 </p></details>
+
 ## 2. Data preparation
 
 Deutsche Börse Public Data Set consists of trade data aggregated one minute intervals. While such high fidelity data could provide an excellent insight and prove to be a valuable tool in quantitative finanical analysis, for the scope of this workshop data aggregated at a larger interval rate, such as daily and hourly would be more convenient to deal with.
 
 Moreover, the source dataset is organized into hierarchical S3 bucket prefixes, according to date and time and contains some missing days, hours, either due to non-trading window, or due to error in data collection. In the [dbg-dataprep](notebooks/dbg-dataprep.ipynb) notebook, you'll download raw data from source for an interval of your chosing, and have the resampled data aggregated at hourly and daily level uploaded to your own S3 bucket, which will bucket analysis eaiser. 
 
-Within this notebook, you'll also find code to that you could use to grab the cleaned data directly from an S3 bucket maintained for this workshop. This alternative will save you time in that you do not have to execute code to grab data from source and cleanse yourself.
+Within this notebook, you'll also find code to that you could use to grab the cleaned data directly from an S3 bucket maintained for this workshop. This alternative will save you time in that you do not have to execute code to grab data from source and cleanse yourself. In order to use this option of obtaining data, execute the cells in the notebook from section **2.5** onward.
 
 Whichever way you choose, proceed to obtain the data by executing code in dbg-dataprep](notebooks/dbg-dataprep.ipynb) from your SageMaker Notebook instance, and come to the next section of this readme when finished.
 
