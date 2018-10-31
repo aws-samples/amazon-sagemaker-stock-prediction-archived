@@ -202,17 +202,17 @@ As one would imagine individual stocks' movement doesn't exist in vaccuum. Often
 
 Empirically we can assume that companies in similar industries, such as automobile or telecommunication industry would have some bearing on each others' price movements. In order to confirm this intuition, you can execute the code in [dbg-stock-clustering](notebooks/dbg-stock-clustering.ipynb) notebook, to have the similar stocks clustered, using the **HDBSCAN** algorithm.
 
-Although clustering result may vary depending on the time period you choose while running the algorithm, and the similarity function you choose, for the stocks in this dataset, you should stocks clustered somewhat similarly as shown in the diagram below.
+Although clustering result may vary depending on the time period you choose while running the algorithm, and the similarity function you choose, for the stocks in this dataset, they should be clustered somewhat similarly as shown in the diagram below.
 
 <details>
 <summary><strong>Clustered stock view (expand for diagram)</strong></summary><p>
 
-Some prominent clusters are highlighted manually in this image, absed on the clustering algortihm output.
+Some prominent clusters are highlighted manually in this image, based on the clustering algortihm output.
 
-    ![Create bucket screenshot](./images/stockclusters.png)
+  ![Create bucket screenshot](./images/stockclusters.png)
 
 </p></details>
-
+<br>
 To see for yourself, you can execute the code in [dbg-stock-clustering](notebooks/dbg-stock-clustering.ipynb) from your SageMaker Notebook instance and come to the next section of this readme when finished.
 
 
