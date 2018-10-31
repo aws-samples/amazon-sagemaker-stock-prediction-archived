@@ -213,6 +213,7 @@ Some prominent clusters are highlighted manually in this image, based on the clu
 
 </p></details>
 <br>
+
 To see for yourself, you can execute the code in [dbg-stock-clustering](notebooks/dbg-stock-clustering.ipynb) from your SageMaker Notebook instance and come to the next section of this readme when finished.
 
 
