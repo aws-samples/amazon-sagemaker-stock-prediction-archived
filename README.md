@@ -85,7 +85,7 @@ Athena allows you to query data directly from S3 buckets, using standard SQL com
 Use the DDL provided below to create an Athena table, which currently wouldn't display any data, but you'll be able to run queries and generate QuickSight dashboard against this table once the following data preparation stage is completed.
 
 <details>
-<summary><strong>Create table (expand for details)</strong></summary><p>
+<summary><strong>Create tables (expand for details)</strong></summary><p>
 
 1. DDL to create hourly stock data table.
 
@@ -113,21 +113,6 @@ Use the DDL provided below to create an Athena table, which currently wouldn't d
       's3://<Your S3 Bucket Name>/dbg-stockdata/source/H/'
     TBLPROPERTIES (
       'classification'='csv')
-    ```
-    
-1. Since the table infers all date columns as strings and number columns as decimals, use the following DDL to create an hourly view, casting the columns to appropriate data types.    
-
-    ```      
-    CREATE OR REPLACE VIEW "stockdata_hourly_view" AS
-    SELECT date_parse(stock.calcdatetime, '%Y-%m-%d %H:%i:%s') AS CalcDateTime,
-            stock.Mnemonic as Mnemonic,
-            stock.MinPrice as MinPrice,
-            stock.MaxPrice as MaxPrice,
-            stock.StartPrice as StartPrice,
-            stock.EndPrice as EndPrice,
-            cast(stock.TradedVolume as integer) as TradedVolume,
-            cast(stock.NumberOfTrades as integer) as NumberOfTrades
-    FROM stockdata_hourly AS stock
     ```
 
 1. DDL to create daily stock data table.
@@ -157,7 +142,27 @@ Use the DDL provided below to create an Athena table, which currently wouldn't d
     TBLPROPERTIES (
       'classification'='csv')
     ```
-    
+
+</p></details>
+
+<details>
+<summary><strong>Create views (expand for details)</strong></summary><p>
+
+1. Since the table infers all date columns as strings and number columns as decimals, use the following DDL to create an hourly view, casting the columns to appropriate data types.    
+
+    ```      
+    CREATE OR REPLACE VIEW "stockdata_hourly_view" AS
+    SELECT date_parse(stock.calcdatetime, '%Y-%m-%d %H:%i:%s') AS CalcDateTime,
+            stock.Mnemonic as Mnemonic,
+            stock.MinPrice as MinPrice,
+            stock.MaxPrice as MaxPrice,
+            stock.StartPrice as StartPrice,
+            stock.EndPrice as EndPrice,
+            cast(stock.TradedVolume as integer) as TradedVolume,
+            cast(stock.NumberOfTrades as integer) as NumberOfTrades
+    FROM stockdata_hourly AS stock
+    ```
+
 1. Since the table infers all date columns as strings and number columns as decimals, use the following DDL to create a daily view, casting the columns to appropriate data types.    
 
     ```      
@@ -175,36 +180,41 @@ Use the DDL provided below to create an Athena table, which currently wouldn't d
 
 </p></details>
 
-<details>
-<summary><strong>Create view (expand for details)</strong></summary><p>
-
-    ```
-    CREATE OR REPLACE VIEW "xetrawithts" AS
-    SELECT isin,
-            mnemonic,
-            startprice,
-            maxprice,
-            minprice,
-            endprice,
-            tradedvolume,
-            numberoftrades,
-            date_parse(xetra.date||xetra.time,'%Y-%m-%d%H:%i') AS calcdatetime
-    FROM xetra
-    ```
-    
-</p></details>
-
 ## 2. Data preparation
 
 Deutsche Börse Public Data Set consists of trade data aggregated one minute intervals. While such high fidelity data could provide an excellent insight and prove to be a valuable tool in quantitative finanical analysis, for the scope of this workshop data aggregated at a larger interval rate, such as daily and hourly would be more convenient to deal with.
 
-Moreover, the source dataset is organized into hierarchical S3 bucket prefixes, according to date and time and contains some missing days, hours, either due to non-trading window, or due to error in data collection. In the [dbg-dataprep](notebooks/dbg-dataprep.ipynb) notebook, you'll download raw data from source for an interval of your chosing, and have the resampled data aggregated at hourly and daily level uploaded to your own S3 bucket, which will bucket analysis eaiser. 
+Moreover, the source dataset is organized into hierarchical S3 bucket prefixes, according to date and time and contains some missing days, hours, either due to non-trading window, or due to error in data collection. In the [dbg-data-preperation](notebooks/dbg-data-preperation.ipynb) notebook, you'll download raw data from source for an interval of your chosing, and have the resampled data aggregated at hourly and daily level uploaded to your own S3 bucket, which will bucket analysis eaiser. 
 
 Within this notebook, you'll also find code to that you could use to grab the cleaned data directly from an S3 bucket maintained for this workshop. This alternative will save you time in that you do not have to execute code to grab data from source and cleanse yourself. In order to use this option of obtaining data, execute the cells in the notebook from section **2.5** onward.
 
-Whichever way you choose, proceed to obtain the data by executing code in [dbg-dataprep](notebooks/dbg-dataprep.ipynb) from your SageMaker Notebook instance, and come to the next section of this readme when finished.
+Whichever way you choose, proceed to obtain the data by executing code in [dbg-data-preperation](notebooks/dbg-data-preperation.ipynb) from your SageMaker Notebook instance, and come to the next section of this readme when finished.
 
-## 3. Data Visualization
+## 3. Data Analysis
+After we prepared the data, we did some preliminary analysis and observed that :
+- Minimum and maximum prices during an interval are possible indicators of closing Price, in that during an upward trend of prices, closing price is closer to maximum price, whereas during a downward trend it is closer to minimum price.
+- Minimum and maximum price during an interval are possible indicators of opening Price, in that during an upward trend of prices, opening price is closer to minimum price, whereas during a downward trend it is closer to maximum price.
+- Opening price during an interval is possible indicator of closing Price, in that during an upward trend of prices, closing price is above opening price, whereas during a downward trend it is below opening price.
+
+The insights above are useful becasue while predicting closing price of stocks, these indicates that we could use these other metrices as determining features that has influence on the target metric. We'll use this insight when we build the deep neural network models in next two sections.
+
+As one would imagine individual stocks' movement doesn't exist in vaccuum. Often times, companies in related industries, or in similar businesses, follow similar pattern. IF we could find similar companies' stocks, it would allow us to use these other stocks as exogenous time series, while predicting a particular stock as main time series.
+
+Empirically we can assume that companies in similar industries, such as automobile or telecommunication industry would have some bearing on each others' price movements. In order to confirm this intuition, you can execute the code in [dbg-stock-clustering](notebooks/dbg-stock-clustering.ipynb) notebook, to have the similar stocks clustered, using the **HDBSCAN** algorithm.
+
+Although clustering result may vary depending on the time period you choose while running the algorithm, and the similarity function you choose, for the stocks in this dataset, you should stocks clustered somewhat similarly as shown in the diagram below.
+
+<details>
+<summary><strong>Clustered stock view (expand for diagram)</strong></summary><p>
+
+Some prominent clusters are highlighted manually in this image, absed on the clustering algortihm output.
+
+    ![Create bucket screenshot](./images/stockclusters.png)
+
+</p></details>
+
+To see for yourself, you can execute the code in [dbg-stock-clustering](notebooks/dbg-stock-clustering.ipynb) from your SageMaker Notebook instance and come to the next section of this readme when finished.
+
 
 ## 4. Custom RNN
 
