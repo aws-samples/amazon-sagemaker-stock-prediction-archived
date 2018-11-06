@@ -273,6 +273,14 @@ def query_for_stock(stock_to_predict, target_column, covariate_columns, data, pr
                 pass
     return ts, dynamic_feat, stockts
 
+def plot_predicted_observed_at_quantile(ts, observed, predicted, quantile):
+    ax = None
+    ax = observed.plot( ax = ax )
+    ax.set_xticklabels(observed.index, rotation=90)
+    #for col in prediction.columns:
+    predicted = ts.append(predicted[quantile])
+    predicted.plot(ax = ax)
+
 
 def plot(
     predictor, 

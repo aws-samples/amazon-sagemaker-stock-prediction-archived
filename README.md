@@ -220,17 +220,17 @@ To see for yourself, you can execute the code in [dbg-stock-clustering](notebook
 
 ## 4. Custom RNN
 
-Forecasting the evolution of events over time is essential in many applications, ranging from financial analysis, to climatoloy, to logistics and supply chain management. Although predicting future is hard, and requires availability of good reliable indicators, the underlying infrastructure tools and algorithmic techniques are available on AWS, and is the main focus of this workshop. 
+Forecasting the evolution of events over time is essential in many applications, ranging from financial analysis, to climatology, to logistics and supply chain management. Although predicting future is hard, and requires availability of good and reliable indicators, the underlying infrastructure tools and algorithmic techniques are available on AWS, and is the main focus of this workshop. 
 
-Following the next two modules in this workshop, you'll have an understanding of how **Recurrent Neural Network (RNN)** based deep learning algorithms can be applied to such sequence data, as the stock market data that we are using in this workshop. You'll also know where to start if you decide to use AWS provided algorithm for this purpose.
+Following two modules in this workshop will provide you with an understanding of how **Recurrent Neural Network (RNN)** based deep learning algorithms can be applied to such sequence data, such as the stock market data. You'll also know where to start if you decide to use AWS provided algorithm for this purpose.
 
 At a high level, you'll follow the plan as described in the session plan diagram:
 
   ![Session plan diagram](./images/session-plan.png)
 
-As a first step, you'll use a custom RNN based algorithm, following the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Since the data preparation steps have already been completed in previous modules, using this notebook, you'll simply submit your model to SageMaker for training. Once trained, you'll deploy the model to generate prediciton and lastly you'll forecast future value of stock price time series and visualize within the notebook to see the performance of the model you deployed.
+As a first step, you'll use a custom RNN based algorithm, following the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Since the data preparation steps have already been completed in previous modules, using this notebook, you'll simply submit your model to SageMaker for training. Once trained, you'll deploy the model to generate prediciton and lastly, you'll forecast future value of stock price time series and visualize within the notebook to see the performance of the model you deployed.
 
-When using your own algorithm, you can always start running the data formatting, loading, and model training and prediction generation code within your notebook environment. However in order to productionize your model, you would use managed training and hosting. This approach not only gives you flexibility of choosing the appropriately sized compute and ensures you only pay for what you actually use, it also makes it easier for data engineers to establish model pipelines, whereby such tasks can be automated in a repeatbale fashion, by leveraging  native integration with various other event and analytics services. 
+When using your own algorithm, you start by executing code for data formatting, loading, model training and prediction - all from within your notebook environment. However in order to productionize your model, you would use managed training and hosting. This approach not only gives you flexibility of choosing the appropriately sized compute and ensures you only pay for what you actually use, it also makes it easier for data engineers to establish model pipelines, whereby such tasks can be automated in a repeatbale fashion, by leveraging  native integration with various other event and analytics services. 
 
 You can refer to SageMaker build framework, as described in [aws-sagemaker-build](https://github.com/aws-samples/aws-sagemaker-build) repository, to automate build and deployment of machine learning models.
 
@@ -239,9 +239,9 @@ For now, you can proceed to train and deploy the custom RNN model following the 
 
 ## 5. SageMaker DeepAR
 
-The previous module served to deonstrate that even without use of meaningful covariate data, using RNN based deep neural network, it is possible to predict stock price movements better than random guess. There are however better algorithms that might be able to improve upon the forecasting results obtained by our crude RNN based model, as you'll see in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
+The previous module served to demonstrate that even without use of meaningful covariate data, using RNN based deep neural network, it is possible to predict stock price movements better than random guess. There are however better algorithms that might be able to improve upon the forecasting results obtained by our crude RNN based model, as you'll see in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
 
-Classical forecasting methods, such as **ARIMA (Autoregressive Integrated mooving average)**, attempts to predict a future value by regressing a target time series itself on some lag. This technique is further improved by **ARIMAx**, which includes covariates and does the regression on the lag of the series of itself and the other related time series. In both cases, another part of regression is done on some lag of random fluctuations around the moving average, thereby accounting for the stochastic part (as in moving average - MA).
+Classical forecasting methods, such as **ARIMA (Autoregressive Integrated moving average)**, attempts to predict a future value by regressing a target time series itself on some lag. This technique is further improved by **ARIMAx**, which includes covariates and does the regression on the lag of the series of itself and the other related time series. In both cases, another part of regression is done on some lag of random fluctuations around the moving average, thereby accounting for the stochastic part (as in moving average - MA).
 
 One major drawback in both of these classical approaches is that it fits a single model to each individual time series. In reality however, such as in the case of the stock market data we are exploring in this workshop, we encounter many similar time series across a set of cross-sectional units. It is beneficial, in such cases, to train a single model jointly over all these time series.
 
@@ -251,5 +251,5 @@ A recent feature addition in DeepAR is inclusion of dynamic features, which work
 
 In reality however, you might discover data, such as forward looking bond prices, federal interest rate, companies revenue or sales guidance, option pricing etc. DeepAR's support of dynamic feature would then allow you to incorporate such additional knowledge about future into your model, thereby allowing you to forecast the futre prices better.
 
-You can now proceed to explore the final approach, of predicting stock price movements using DeepAr, following the code in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
+You can now proceed to explore the final approach, of predicting stock price movements using DeepAR, following the code in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
 
