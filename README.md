@@ -238,3 +238,18 @@ For now, you can proceed to train and deploy the custom RNN model following the 
 
 
 ## 5. SageMaker DeepAR
+
+The previous module served to deonstrate that even without use of meaningful covariate data, using RNN based deep neural network, it is possible to predict stock price movements better than random guess. There are however better algorithms that might be able to improve upon the forecasting results obtained by our crude RNN based model, as you'll see in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
+
+Classical forecasting methods, such as **ARIMA (Autoregressive Integrated mooving average)**, attempts to predict a future value by regressing a target time series itself on some lag. This technique is further improved by **ARIMAx**, which includes covariates and does the regression on the lag of the series of itself and the other related time series. In both cases, another part of regression is done on some lag of random fluctuations around the moving average, thereby accounting for the stochastic part (as in moving average - MA).
+
+One major drawback in both of these classical approaches is that it fits a single model to each individual time series. In reality however, such as in the case of the stock market data we are exploring in this workshop, we encounter many similar time series across a set of cross-sectional units. It is beneficial, in such cases, to train a single model jointly over all these time series.
+
+[Amazon SageMaker DeepAR](https://docs.aws.amazon.com/sagemaker/latest/dg/deepar.html) follows this approach and can train a model with hundreds of time series. Once trained, such a model can then be used to forecast any of the time series' values into the future. As compared to our custom RNN approach, you would not need to train different model to predict movements of different stocks.
+
+A recent feature addition in DeepAR is inclusion of dynamic features, which works similarly as we used covariates in our custom RNN based model. Using dynamic features, as supporting time series' that help explain the variability of the main time serieses, you can easily improve upon the prediction accuracy. Values of dynamic feature series' however have to be known for the forecast horizon. Since we are using other metrices related to stock price as dynamic features in this workshop example, it is not realistic to know the values of those in advance, throughout the forecast horizon. 
+
+In reality however, you might discover data, such as forward looking bond prices, federal interest rate, companies revenue or sales guidance, option pricing etc. DeepAR's support of dynamic feature would then allow you to incorporate such additional knowledge about future into your model, thereby allowing you to forecast the futre prices better.
+
+You can now proceed to explore the final approach, of predicting stock price movements using DeepAr, following the code in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
+
