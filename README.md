@@ -32,7 +32,7 @@ Since you will execute most of the workshop steps on a Jupyter Notebook hosted o
 
 Refer to [AWS Region Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) to check the availability of SageMaker service, and choose to create the following infrastructure in any of the regions where it is available.
 As of re:Invent-2018, SageMaker is available in the following regions:
-- us-east-1 (Norther Virgina)
+- us-east-1 (Northern Virgina)
 - us-east-2 (Ohio)
 - us-west-2 (Oregon)
 - eu-west-1 (Ireland)
@@ -191,6 +191,7 @@ Within this notebook, you'll also find code to that you could use to grab the cl
 Whichever way you choose, proceed to obtain the data by executing code in [dbg-data-preperation](notebooks/dbg-data-preperation.ipynb) from your SageMaker Notebook instance, and come to the next section of this readme when finished.
 
 ## 3. Data Analysis
+
 After we prepared the data, we did some preliminary analysis and observed that :
 - Minimum and maximum prices during an interval are possible indicators of closing Price, in that during an upward trend of prices, closing price is closer to maximum price, whereas during a downward trend it is closer to minimum price.
 - Minimum and maximum price during an interval are possible indicators of opening Price, in that during an upward trend of prices, opening price is closer to minimum price, whereas during a downward trend it is closer to maximum price.
@@ -218,5 +219,22 @@ To see for yourself, you can execute the code in [dbg-stock-clustering](notebook
 
 
 ## 4. Custom RNN
+
+Forecasting the evolution of events over time is essential in many applications, ranging from financial analysis, to climatoloy, to logistics and supply chain management. Although predicting future is hard, and requires availability of good reliable indicators, the underlying infrastructure tools and algorithmic techniques are available on AWS, and is the main focus of this workshop. 
+
+Following the next two modules in this workshop, you'll have an understanding of how **Recurrent Neural Network (RNN)** based deep learning algorithms can be applied to such sequence data, as the stock market data that we are using in this workshop. You'll also know where to start if you decide to use AWS provided algorithm for this purpose.
+
+At a high level, you'll follow the plan as described in the session plan diagram:
+
+  ![Session plan diagram](./images/session-plan.png)
+
+As a first step, you'll use a custom RNN based algorithm, following the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Since the data preparation steps have already been completed in previous modules, using this notebook, you'll simply submit your model to SageMaker for training. Once trained, you'll deploy the model to generate prediciton and lastly you'll forecast future value of stock price time series and visualize within the notebook to see the performance of the model you deployed.
+
+When using your own algorithm, you can always start running the data formatting, loading, and model training and prediction generation code within your notebook environment. However in order to productionize your model, you would use managed training and hosting. This approach not only gives you flexibility of choosing the appropriately sized compute and ensures you only pay for what you actually use, it also makes it easier for data engineers to establish model pipelines, whereby such tasks can be automated in a repeatbale fashion, by leveraging  native integration with various other event and analytics services. 
+
+You can refer to SageMaker build framework, as described in [aws-sagemaker-build](https://github.com/aws-samples/aws-sagemaker-build) repository, to automate build and deployment of machine learning models.
+
+For now, you can proceed to train and deploy the custom RNN model following the code in the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Once finished, you can come back to the following section of this readme to explore another approach, using one of SageMaker native algorithms, as provided by AWS, free of charge.
+
 
 ## 5. SageMaker DeepAR
