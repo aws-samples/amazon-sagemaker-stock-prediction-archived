@@ -1,24 +1,24 @@
-# Stock Prediction using Neural Networks on Amazon SageMaker
+# Stock Prediction using Neural Network on Amazon SageMaker
 
 ## Introduction
 
-This is a sample workshop that demonstrates how to use neural networks based algorithm for time series prediction. The workshop uses stock market data maintained by Deutsche Börse under [Registry of open data](https://registry.opendata.aws/deutsche-boerse-pds/) on AWS. This dataset continaes minute by minute stock movement data from EU market, containing 100+ securities, tracked since July, 2016.
+This is a sample workshop that demonstrates how to use Neural Network based algorithm for time series prediction. The workshop uses stock market data maintained by Deutsche Börse under [Registry of open data](https://registry.opendata.aws/deutsche-boerse-pds/) on AWS. This dataset contains minute by minute stock movement data from EU market, containing 100+ securities, tracked since July, 2016.
 
 Time series data can be analysed using a variety of techniques, ranging from a simple Multi Layer Perceptron, to a stacked Recurrent Neural Network, using forecasting methods such as Autoregressive Integrated Moving Average (ARIMA) or Exponential Smoothing (ETS). As a first attempt, we'll use a simple RNN based model to predict stock price a single security.
 
 ## License Summary
 
-This sample code is made available under a modified MIT license. See the LICENSE file.
+This sample code is made available under a modified MIT license. See the [LICENSE](./LICENSE) file.
 
 ## Action Plan
 
-[Amazon SageMaker](https://aws.amazon.com/sagemaker/), is the Machine Learning platform on AWS that provides infrastructure to run hosted Jupyetr Notebooks. Being integrated with other storage and analytics services on AWS, data collection, preparation and visualization, all essential tasks for a successful Machine Learning project becomes more secured and streamlined on SageMaker. 
+[Amazon SageMaker](https://aws.amazon.com/sagemaker/), is the Machine Learning platform on AWS that provides infrastructure to run hosted Jupyter Notebooks. Being integrated with other storage and analytics services on AWS, data collection, preparation and visualization, all essential tasks for a successful Machine Learning project becomes secured, scalable and streamlined on SageMaker. 
 
 ![SageMaker](./images/sagemaker.png)
 
-In this workshop, we'll use SageMaker hosted notebooks to fetch the data from Deutsche Börse dataset, clean up and aggregate the data on [Amazon S3](https://aws.amazon.com/s3/) buckets. We'll also use [Amazon Athena](https://aws.amazon.com/athena/) to query the data and [Amazon QuickSight](https://aws.amazon.com/quicksight/) to visuaize the data. This will allows us to develop an intuition about the nature of the data.
+In this workshop, we'll use SageMaker hosted notebooks to fetch the data from Deutsche Börse dataset, clean up and aggregate the data on [Amazon S3](https://aws.amazon.com/s3/) buckets. We'll also use [Amazon Athena](https://aws.amazon.com/athena/) to query the data and [Amazon QuickSight](https://aws.amazon.com/quicksight/) to visualize the data. This will allow us to develop an intuition about the nature of the data.
 
-In addition to hosted Notebooks, SageMaker also provdes managed training and hosting for Machine Learning models, using a variety of languages and libraries. In our first attempt, after we build a model locally, we'll use this functionality to containerize the training and prediction code, publish on an [Amaozn ECR](https://aws.amazon.com/ecr/) repository, and host our custom model behind a SageMaker endpoint to generate prediction.
+In addition to hosted Notebooks, SageMaker also provides managed training and hosting for Machine Learning models, using a variety of languages and libraries. In our first attempt, after we build a model locally, we'll use this functionality to containerize the training and prediction code, publish on an [Amaozn ECR](https://aws.amazon.com/ecr/) repository, and host our custom model behind a SageMaker endpoint to generate prediction.
 
 SageMaker also provides several built in algorithms, for image classification, regression and clustering of structured data, timeseries processing and natural language processing. In the later part of this workshop we'll use [DeepAR](https://docs.aws.amazon.com/sagemaker/latest/dg/deepar.html), which is a supervised learning algorithm for forecasting one-dimensional time series using RNN.
 
@@ -43,10 +43,12 @@ As of re:Invent-2018, SageMaker is available in the following regions:
 
 
 ### 1.1. Lifecycle configuration
-1.  Lifecycle configurations are small bootup scripts, that you can use to automate certain tasks when a Notebook instance in being created and/or being started. For this workshop, create a startup script to download pre-built notebooks from this Github repository onto your notebook instance. 
+
+Lifecycle configurations are small bootup scripts, that you can use to automate certain tasks when a Notebook instance in being created and/or being started. For this workshop, create a startup script to download pre-built notebooks from this Github repository onto your notebook instance. 
 
 <details>
 <summary><strong>Create configuration (expand for details)</strong></summary><p>
+
 Configure this script to run on `Create notebook`.
 
     ```
@@ -57,7 +59,6 @@ Configure this script to run on `Create notebook`.
     mv amazon-sagemaker-stock-prediction/container SageMaker/fsv309-workshop/container/
     mv amazon-sagemaker-stock-prediction/notebooks SageMaker/fsv309-workshop/notebooks/
     mv amazon-sagemaker-stock-prediction/images SageMaker/fsv309-workshop/images/
-    mv amazon-sagemaker-stock-prediction/pretrained-model SageMaker/fsv309-workshop/pretrained-model/
     rm -rf amazon-sagemaker-stock-prediction
     sudo chmod -R ugo+w SageMaker/fsv309-workshop/
     sudo yum install -y docker
@@ -77,7 +78,7 @@ Also create a  startup script as follows, and configure it to run on `Start Note
 1. Use the lifecycle configuration to create Notebook instance in a region of your choice.
 1. Choose a moderatly sized memory optimized instance class, such as `ml.m4.xlarge`
 1. If you do not have an IAM role created prior with all the necessary permissions needed for SageMaker to operate, create a new role on the fly.
-1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose fo the workshop you can proceed without these mechanisms to protect the notebook.
+1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose fo the workshop you can proceed without these mechanisms.
 
 ### 1.3. Athena Table
 Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDLs to create external table in Athena, and a view containing the fields of interest. This allow you to run queries directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
@@ -230,7 +231,7 @@ At a high level, you'll follow the plan as described in the session plan diagram
 
 As a first step, you'll use a custom RNN based algorithm, following the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Since the data preparation steps have already been completed in previous modules, using this notebook, you'll simply submit your model to SageMaker for training. Once trained, you'll deploy the model to generate prediciton and lastly, you'll forecast future value of stock price time series and visualize within the notebook to see the performance of the model you deployed.
 
-When using your own algorithm, you start by executing code for data formatting, loading, model training and prediction - all from within your notebook environment. However in order to productionize your model, you would use managed training and hosting. This approach not only gives you flexibility of choosing the appropriately sized compute and ensures you only pay for what you actually use, it also makes it easier for data engineers to establish model pipelines, whereby such tasks can be automated in a repeatbale fashion, by leveraging  native integration with various other event and analytics services. 
+When using your own algorithm, you start by executing code for data formatting, loading, model training and prediction - all from pwithin your notebook environment. However in order to productionize your model, you would use managed training and hosting. This approach not only gives you flexibility of choosing the appropriately sized compute and ensures you only pay for what you actually use, it also makes it easier for data engineers to establish model pipelines, whereby such tasks can be automated in a repeatbale fashion, by leveraging  native integration with various other event and analytics services. 
 
 You can refer to SageMaker build framework, as described in [aws-sagemaker-build](https://github.com/aws-samples/aws-sagemaker-build) repository, to automate build and deployment of machine learning models.
 
