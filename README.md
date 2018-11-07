@@ -1,36 +1,36 @@
 # Stock Prediction using Neural Network on Amazon SageMaker
 
+## License Summary
+
+This sample code is made available under a modified MIT license. See the [LICENSE](./LICENSE) file.
+
 ## Introduction
 
 This is a sample workshop that demonstrates how to use Neural Network based algorithm for time series prediction. The workshop uses stock market data maintained by Deutsche Börse under [Registry of open data](https://registry.opendata.aws/deutsche-boerse-pds/) on AWS. This dataset contains stock movement data from EU market, containing 100+ stocks, updated by the minute. Data is available strating from July 2016.
 
 Time series data can be analysed using a variety of techniques, ranging from a simple Multi Layer Perceptron, to a stacked Recurrent Neural Network, using forecasting methods such as Autoregressive Integrated Moving Average (ARIMA) or Exponential Smoothing (ETS). As a first attempt, we'll use a simple Recurrent Neural Network (RNN) model to predict the price of a single stock.
 
-## License Summary
-
-This sample code is made available under a modified MIT license. See the [LICENSE](./LICENSE) file.
-
 ## Action Plan
 
-[Amazon SageMaker](https://aws.amazon.com/sagemaker/), is the Machine Learning platform on AWS that provides infrastructure to run hosted Jupyter Notebooks. Being integrated with other storage and analytics services on AWS, data collection, preparation and visualization, all essential tasks for a successful Machine Learning project becomes secured, scalable and streamlined on SageMaker. 
+[Amazon SageMaker](https://aws.amazon.com/sagemaker/) is the Machine Learning platform on AWS that provides infrastructure to run hosted Jupyter Notebooks. Being integrated with other storage and analytics services on AWS, data collection, preparation and visualization - the essential tasks for a successful Machine Learning project become secure, scalable and streamlined on SageMaker. 
 
 ![SageMaker](./images/sagemaker.png)
 
 In this workshop, we'll use SageMaker hosted notebooks to fetch the data from Deutsche Börse dataset, clean up and aggregate the data on [Amazon S3](https://aws.amazon.com/s3/) buckets. We'll also use [Amazon Athena](https://aws.amazon.com/athena/) to query the data and [Amazon QuickSight](https://aws.amazon.com/quicksight/) to visualize the data. This will allow us to develop an intuition about the nature of the data.
 
-In addition to hosted Notebooks, SageMaker also provides managed training and hosting for Machine Learning models, using a variety of languages and libraries. In our first attempt, after we build a model locally, we'll use this functionality to containerize the training and prediction code, publish on an [Amaozn ECR](https://aws.amazon.com/ecr/) repository, and host our custom model behind a SageMaker endpoint to generate prediction.
+In addition to hosted Notebooks, SageMaker also provides managed training and hosting for Machine Learning models, using a variety of languages and libraries. In our first attempt, after we build a model locally, we'll use this functionality to containerize the training and prediction code, publish on an [Amazon ECR](https://aws.amazon.com/ecr/) repository, and host our custom model behind a SageMaker endpoint to generate prediction.
 
 SageMaker also provides several built in algorithms, for image classification, regression and clustering of structured data, timeseries processing and natural language processing. In the later part of this workshop we'll use [DeepAR](https://docs.aws.amazon.com/sagemaker/latest/dg/deepar.html), which is a supervised learning algorithm for forecasting one-dimensional time series using RNN.
 
 ## Disclaimer
 
-This workshop is not an exercise in statistical methods, neither does it attempt to build a viable stock prediction model that you can use to make money. However it does showcase the techniques that you can use on AWS Machine Learning platform
+This workshop is not an exercise in statistical methods, neither does it attempt to build a viable stock prediction model that you can use to make money. However it does showcase the techniques that you can use on AWS Machine Learning platform.
 
 ## 1. Getting Started
 
-Since you will execute most of the workshop steps on a Jupyter Notebook hosted on SageMaker, start by creating a notebook instance on SageMaker from AWS Console.
+Since you will execute most of the workshop steps on a Jupyter Notebook hosted on SageMaker, start by creating a notebook instance on SageMaker from the AWS Console.
 
-Refer to [AWS Region Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) to check the availability of SageMaker service, and choose to create the following infrastructure in any of the regions where it is available.
+Refer to the [AWS Region Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) to check the availability of SageMaker service, and choose to create the following infrastructure in any of the regions where it is available.
 As of re:Invent-2018, SageMaker is available in the following regions:
 - us-east-1 (Northern Virgina)
 - us-east-2 (Ohio)
