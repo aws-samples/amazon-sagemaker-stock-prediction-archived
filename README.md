@@ -18,7 +18,7 @@ Time series data can be analysed using a variety of techniques, ranging from a s
 
 In this workshop, we'll use SageMaker hosted notebooks to fetch the data from Deutsche Börse dataset, clean up and aggregate the data on [Amazon S3](https://aws.amazon.com/s3/) buckets. We'll also use [Amazon Athena](https://aws.amazon.com/athena/) to query the data and [Amazon QuickSight](https://aws.amazon.com/quicksight/) to visualize the data. This will allow us to develop an intuition about the nature of the data.
 
-In addition to hosted Notebooks, SageMaker also provides managed training and hosting for Machine Learning models, using a variety of languages and libraries. In our first attempt, after we build a model locally, we'll use this functionality to containerize the training and prediction code, publish on an [Amazon ECR](https://aws.amazon.com/ecr/) repository, and host our custom model behind a SageMaker endpoint to generate prediction.
+In addition to hosted Notebooks, SageMaker also provides managed training and hosting for Machine Learning models, using a variety of languages and libraries. In our first attempt, we'll use this functionality to containerize the training and prediction code, publish on an [Amazon ECR](https://aws.amazon.com/ecr/) repository, and host our custom model behind a SageMaker endpoint to generate prediction.
 
 SageMaker also provides several built in algorithms, for image classification, regression and clustering of structured data, timeseries processing and natural language processing. In the later part of this workshop we'll use [DeepAR](https://docs.aws.amazon.com/sagemaker/latest/dg/deepar.html), which is a supervised learning algorithm for forecasting one-dimensional time series using RNN.
 
@@ -26,7 +26,7 @@ SageMaker also provides several built in algorithms, for image classification, r
 
 This workshop is not an exercise in statistical methods, neither does it attempt to build a viable stock prediction model that you can use to make money. However it does showcase the techniques that you can use on AWS Machine Learning platform.
 
-## 1. Getting Started
+## 1. Getting started
 
 Since you will execute most of the workshop steps on a Jupyter Notebook hosted on SageMaker, start by creating a notebook instance on SageMaker from the AWS Console.
 
@@ -75,12 +75,12 @@ Also create a  startup script as follows, and configure it to run on `Start Note
 </p></details>
 
 ### 1.2. Notebook instance
-1. Use the lifecycle configuration to create Notebook instance in a region of your choice.
-1. Choose a moderatly sized memory optimized instance class, such as `ml.m4.xlarge`
+1. Use the lifecycle configuration to create a Notebook instance in a region of your choice.
+1. Choose a moderatly sized memory optimized instance class, such as `ml.m4.xlarge`.
 1. If you do not have an IAM role created prior with all the necessary permissions needed for SageMaker to operate, create a new role on the fly.
-1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose fo the workshop you can proceed without these mechanisms.
+1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose of the workshop you can proceed without these mechanisms.
 
-### 1.3. Athena Table
+### 1.3. Athena table
 Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDLs to create external table in Athena, and a view containing the fields of interest. This allow you to run queries directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
 
 Use the DDL provided below to create an Athena table, which currently wouldn't display any data, but you'll be able to run queries and generate QuickSight dashboard against this table once the following data preparation stage is completed.
@@ -146,6 +146,7 @@ Use the DDL provided below to create an Athena table, which currently wouldn't d
 
 </p></details>
 
+
 <details>
 <summary><strong>Create views (expand for details)</strong></summary><p>
 
@@ -183,15 +184,15 @@ Use the DDL provided below to create an Athena table, which currently wouldn't d
 
 ## 2. Data preparation
 
-Deutsche Börse Public Data Set consists of trade data aggregated one minute intervals. While such high fidelity data could provide an excellent insight and prove to be a valuable tool in quantitative finanical analysis, for the scope of this workshop data aggregated at a larger interval rate, such as daily and hourly would be more convenient to deal with.
+Deutsche Börse Public Data Set consists of trade data aggregated at one minute intervals. While such high fidelity data could provide an excellent insight and prove to be a valuable tool in quantitative finanical analysis, for the scope of this workshop data aggregated at a larger interval rate, such as daily and hourly, would be more convenient to deal with.
 
-Moreover, the source dataset is organized into hierarchical S3 bucket prefixes, according to date and time and contains some missing days, hours, either due to non-trading window, or due to error in data collection. In the [dbg-data-preperation](notebooks/dbg-data-preperation.ipynb) notebook, you'll download raw data from source for an interval of your chosing, and have the resampled data aggregated at hourly and daily level uploaded to your own S3 bucket, which will bucket analysis eaiser. 
+Moreover, the source dataset is organized into hierarchical S3 bucket prefixes, according to date and time and contains some missing days, hours, either due to non-trading windows, or due to errors in data collection. In the [dbg-data-preperation](notebooks/dbg-data-preperation.ipynb) notebook, you'll download raw data from source for an interval of your chosing, resample the data at hourly and daily intervals, and upload to your own S3 bucket. 
 
-Within this notebook, you'll also find code to that you could use to grab the cleaned data directly from an S3 bucket maintained for this workshop. This alternative will save you time in that you do not have to execute code to grab data from source and cleanse yourself. In order to use this option of obtaining data, execute the cells in the notebook from section **2.5** onward.
+Within this notebook, you'll also find code to that you could use to grab the cleaned data directly from an S3 bucket maintained for this workshop. This alternative will save you time because you do not have to execute code to obtain data from the source and cleanse it yourself. In order to use the second option, execute the cells in the notebook from section **2.5** onward.
 
 Whichever way you choose, proceed to obtain the data by executing code in [dbg-data-preperation](notebooks/dbg-data-preperation.ipynb) from your SageMaker Notebook instance, and come to the next section of this readme when finished.
 
-## 3. Data Analysis
+## 3. Data analysis
 
 After we prepared the data, we did some preliminary analysis and observed that :
 - Minimum and maximum prices during an interval are possible indicators of closing Price, in that during an upward trend of prices, closing price is closer to maximum price, whereas during a downward trend it is closer to minimum price.
@@ -221,17 +222,17 @@ To see for yourself, you can execute the code in [dbg-stock-clustering](notebook
 
 ## 4. Custom RNN
 
-Forecasting the evolution of events over time is essential in many applications, ranging from financial analysis, to climatology, to logistics and supply chain management. Although predicting future is hard, and requires availability of good and reliable indicators, the underlying infrastructure tools and algorithmic techniques are available on AWS, and is the main focus of this workshop. 
+Forecasting the evolution of events over time is essential in many applications, such as financial analysis, climatology, logistics, and supply chain management. Although predicting the future is hard, and requires availability of reliable and effective indicators, the infrastructure tools and algorithmic techniques are readily available on AWS. 
 
-Following two modules in this workshop will provide you with an understanding of how **Recurrent Neural Network (RNN)** based deep learning algorithms can be applied to such sequence data, such as the stock market data. You'll also know where to start if you decide to use AWS provided algorithm for this purpose.
+Following two modules in this workshop will provide you with an understanding of how **Recurrent Neural Network (RNN)** based deep learning algorithms can be applied to sequential data, such as the stock market data. You'll also know where to start if you decide to use an AWS provided algorithm for this purpose.
 
 At a high level, you'll follow the plan as described in the session plan diagram:
 
   ![Session plan diagram](./images/session-plan.png)
 
-As a first step, you'll use a custom RNN based algorithm, following the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Since the data preparation steps have already been completed in previous modules, using this notebook, you'll simply submit your model to SageMaker for training. Once trained, you'll deploy the model to generate prediciton and lastly, you'll forecast future value of stock price time series and visualize within the notebook to see the performance of the model you deployed.
+As a first step, you'll use a custom RNN based algorithm, following the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Since the data preparation steps have already been completed in previous modules, you'll simply submit your model to SageMaker for training. Once trained, you'll deploy the model to generate predictions, forecast future stock values, and visualize within the notebook to see the performance of the model you deployed.
 
-When using your own algorithm, you start by executing code for data formatting, loading, model training and prediction - all from pwithin your notebook environment. However in order to productionize your model, you would use managed training and hosting. This approach not only gives you flexibility of choosing the appropriately sized compute and ensures you only pay for what you actually use, it also makes it easier for data engineers to establish model pipelines, whereby such tasks can be automated in a repeatbale fashion, by leveraging  native integration with various other event and analytics services. 
+When using your own algorithm, you start by executing code for data formatting, loading, model training and prediction - all from within your notebook environment. However in order to productionize your model, you would use managed training and hosting. This approach not only gives you flexibility of choosing the appropriately sized compute and ensures you only pay for what you actually use, it also makes it easier for data engineers to establish model pipelines, whereby such tasks can be automated in a repeatbale fashion, by leveraging  native integration with various other event and analytics services. 
 
 You can refer to SageMaker build framework, as described in [aws-sagemaker-build](https://github.com/aws-samples/aws-sagemaker-build) repository, to automate build and deployment of machine learning models.
 
