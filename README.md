@@ -72,7 +72,7 @@ Configure this script to run on `Create notebook`.
 1. Use the lifecycle configuration to create a Notebook instance in a region of your choice.
 1. Choose an instance class of smallest size, such as `ml.t2.medium`. Since you'll not use Notebook instance to execute training and prediction code, this will be sufficient. 
 1. If you do not have an IAM role created prior with all the necessary permissions needed for SageMaker to operate, create a new role on the fly.
-1. The IAM role you choose to use with the Notebook needs to be authorized to create ECR repository and upload an container image to the repository. 
+1. The IAM role you choose to use with the Notebook needs to be authorized to create ECR repository and upload an container image to the repository. {Might be good to have screen shot here}
 
     <details>
     <summary><strong>ECR permissions (expand for details)</strong></summary><p>
