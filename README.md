@@ -61,27 +61,26 @@ Configure this script to run on `Create notebook`.
     mv amazon-sagemaker-stock-prediction/images SageMaker/fsv309-workshop/images/
     rm -rf amazon-sagemaker-stock-prediction
     sudo chmod -R ugo+w SageMaker/fsv309-workshop/
-    sudo yum install -y docker
-    ```
-
-Also create a  startup script as follows, and configure it to run on `Start Notebook`.
-
-    ```
-    #!/bin/bash
-    set -e
-    sudo service docker start
+    pip install --upgrade pip
+    pip install hdbscan
     ```
 
 </p></details>
 
 ### 1.2. Notebook instance
 1. Use the lifecycle configuration to create a Notebook instance in a region of your choice.
-1. Choose a moderatly sized memory optimized instance class, such as `ml.m4.xlarge`.
+1. Choose an instance class of smallest size, such as `ml.t2.medium`. Since you'll not use Notebook instance to execute training and prediction code, this will be sufficient. 
 1. If you do not have an IAM role created prior with all the necessary permissions needed for SageMaker to operate, create a new role on the fly.
+1. The IAM role you choose to use with the Notebook needs to be authorized to create ECR repository and upload an container image to the repository. To facilitate these permissions, open the role in IAM console, and add the following permissions:
+  - ecr:CreateRepository
+  - ecr:InitiateLayerUpload
+  - ecr:UploadLayerPart
+  - ecr:CompleteLayerUpload
+  - ecr:PutImage
 1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose of the workshop you can proceed without these mechanisms.
 
 ### 1.3. Athena table
-Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDLs to create external table in Athena, and a view containing the fields of interest. This allow you to run queries directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
+Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDLs to create external table in Athena, and a view containing the fields of interest. Using this view, you can then run queries directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
 
 Use the DDL provided below to create an Athena table, which currently wouldn't display any data, but you'll be able to run queries and generate QuickSight dashboard against this table once the following data preparation stage is completed.
 
@@ -251,7 +250,7 @@ One major drawback in both of these classical approaches is that they fit a sing
 
 A recent feature addition in DeepAR is inclusion of dynamic features, which works in a way similar to how we used covariates in our custom RNN based model. Using dynamic features, as supporting time series' that help explain the variability of the main time series, you can easily improve upon the prediction accuracy. Values of dynamic feature series' however have to be known for the forecast horizon. Although you will be using metrices from the same data set as dynamic features in this workshop, it is not realistic to know the values of those in advance, throughout the forecast horizon. 
 
-In order to adopt to techniques you learn in this workshop to realistic use case, you might use data such as forward looking bond prices, federal interest rate, companies' revenue or sales guidance, option pricing etc. DeepAR's support of dynamic feature would then allow you to incorporate such additional knowledge about future into your model, thereby allowing you to forecast the futre prices better.
+In order to adopt the techniques you learn in this workshop to a real world use case, you might use data such as forward looking bond prices, federal interest rate, companies' revenue or sales guidance, option pricing etc. DeepAR's support of dynamic feature would then allow you to incorporate such additional knowledge about future into your model, thereby allowing you to forecast the futre prices better.
 
 You can now proceed to explore the final approach, of predicting stock price movements using DeepAR, following the code in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
 
