@@ -51,19 +51,20 @@ Lifecycle configurations are small bootup scripts, that you can use to automate 
 
 Configure this script to run on `Create notebook`.
 
-    ```
-    #!/bin/bash
-    set -e
-    git clone https://github.com/aws-samples/amazon-sagemaker-stock-prediction.git
-    mkdir SageMaker/fsv309-workshop
-    mv amazon-sagemaker-stock-prediction/container SageMaker/fsv309-workshop/container/
-    mv amazon-sagemaker-stock-prediction/notebooks SageMaker/fsv309-workshop/notebooks/
-    mv amazon-sagemaker-stock-prediction/images SageMaker/fsv309-workshop/images/
-    rm -rf amazon-sagemaker-stock-prediction
-    sudo chmod -R ugo+w SageMaker/fsv309-workshop/
-    pip install --upgrade pip
-    pip install hdbscan
-    ```
+  ```
+  #!/bin/bash
+  set -e
+  git clone https://github.com/aws-samples/amazon-sagemaker-stock-prediction.git
+  mkdir SageMaker/fsv309-workshop
+  mv amazon-sagemaker-stock-prediction/container SageMaker/fsv309-workshop/container/
+  mv amazon-sagemaker-stock-prediction/notebooks SageMaker/fsv309-workshop/notebooks/
+  mv amazon-sagemaker-stock-prediction/images SageMaker/fsv309-workshop/images/
+  rm -rf amazon-sagemaker-stock-prediction
+  sudo chmod -R ugo+w SageMaker/fsv309-workshop/
+  pip install --upgrade pip
+  pip install hdbscan
+
+  ```
 
 </p></details>
 
