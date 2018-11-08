@@ -53,7 +53,7 @@ Configure this script to run on `Create notebook`.
 
   ```
   #!/bin/bash
-  set -e
+  set -ex
   git clone https://github.com/aws-samples/amazon-sagemaker-stock-prediction.git
   mkdir SageMaker/fsv309-workshop
   mv amazon-sagemaker-stock-prediction/container SageMaker/fsv309-workshop/container/
