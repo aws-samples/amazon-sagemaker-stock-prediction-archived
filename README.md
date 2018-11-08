@@ -74,7 +74,7 @@ Configure this script to run on `Create notebook`.
 1. The IAM role you choose to use with the Notebook needs to be authorized to create ECR repository and upload an container image to the repository. 
 
     <details>
-    <summary>Expand for ECR permissions details</summary><p>
+    <summary><strong>ECR permissions (expand for details)</strong></summary><p>
 
       To facilitate these permissions, open the role in IAM console, and add the following permissions:
       - ecr:CreateRepository
