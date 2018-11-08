@@ -77,11 +77,11 @@ Configure this script to run on `Create notebook`.
     <summary>Expand for ECR permissions details</summary><p>
 
       To facilitate these permissions, open the role in IAM console, and add the following permissions:
-        - ecr:CreateRepository
-        - ecr:InitiateLayerUpload
-        - ecr:UploadLayerPart
-        - ecr:CompleteLayerUpload
-        - ecr:PutImage
+      - ecr:CreateRepository
+      - ecr:InitiateLayerUpload
+      - ecr:UploadLayerPart
+      - ecr:CompleteLayerUpload
+      - ecr:PutImage
 
     </p></details>
 
