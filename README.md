@@ -102,7 +102,6 @@ Configure this script to run on `Create notebook`.
   - ecr:CompleteLayerUpload
   - ecr:PutImage
 
-
 1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose of the workshop you can proceed without these mechanisms.
 
 <details>
