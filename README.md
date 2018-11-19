@@ -63,7 +63,6 @@ Configure this script to run on `Create notebook`.
   mv amazon-sagemaker-stock-prediction/images SageMaker/fsv309-workshop/images/
   rm -rf amazon-sagemaker-stock-prediction
   sudo chmod -R ugo+w SageMaker/fsv309-workshop/
-
   ```
 
 <details>
@@ -92,6 +91,74 @@ Configure this script to run on `Create notebook`.
 ### 1.2. Notebook instance
 1. Use the lifecycle configuration to create a Notebook instance in a region of your choice.
 1. Choose an instance class of smallest size, such as `ml.t2.medium`. Since you'll not use Notebook instance to execute training and prediction code, this will be sufficient. 
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console choose **Services** then select **Amazon SageMaker** under Machine Learning.
+
+1. Choose **Notebook instances** under the section **Notebook** on the left panel.
+    ![Notebook instances](images/notebook-instances.png)
+
+1. Choose **Create notebook Instance** to open the create dialog.
+
+1. Type the name `fsv309-notebook` in the `Name` field.
+
+1. From `Notebook instance type dropdown`, choose `ml.t2.medium`.
+
+1. From `IAM role` dropdown, choose `Create a new role`.
+
+1. In the dialog that pops up, select the radio button for `Any S3 bucket`, .
+    ![Notebook instance IAM role](images/notebook-execution-role.png)
+
+1. Choose **Create Role** to return to notebook creation dialog. Notice that SageMaker creates a new execution role with the current timestamp appended at the end of its name, and that this role remains selected under `IAM role` dropdown.
+
+1. From the `Lifecycle configuration` dropdown, choose the configuration named `fsv309-lifecycle-config`, that you created in section-1.1.
+
+1. Immediately below the `IAM Role` field, you would see a success message in a green message box, with the name of your newly created IAM role displayes as a hyperlink. Click on the hyperlink to open the role in IAM console in a new browser tab.
+
+1. From the IAM console page that opens in a new browser tab, displying the role summary, choose **Add Inline policy**
+    ![Notebook instance setting](images/notebook-execution-role-summary.png)
+
+1. On **Create policy** page, click on **Choose a service**
+    ![Notebook instance setting](images/create-policy.png)
+
+1. In the suggestive search box, type "EC2", to have the list of displayed service filtered down, then choose **EC2 Container Registry** from the narrowed down list.
+    ![Notebook instance setting](images/create-policy-ecr.png)
+
+1. Under `Actions` section, expand `Write` Access level
+
+1. Select actions - **CreateRepository**, **InitiateLayerUpload**, **UploadLayerPart**, **CompleteLayerUpload** and **PutImage**
+    ![Notebook instance setting](images/create-policy-actions-ecr.png)
+
+1. Under `Resources` section, click on the text displaying `You chose actions that require the policy resource type`.
+
+1. Choose **All resources** radio button under `Resources` section.
+    ![Notebook instance setting](images/create-policy-resources-ecr.png)
+
+1. Choose **Review policy** at the bootom right-hand corner of the screen.
+
+1. In the review screen, ensure there are no errors or warnings displayed.
+
+1. Type a name of the policy in `Name` field, Choose a meaningful name, such as `ECRUpload`.
+
+1. Choose **Create policy** at the bootom right-hand corner of the screen.
+    ![Notebook instance setting](images/create-policy-review-ecr.png)
+
+1. Close the browser tab to return to the previous tab for SageMaker console.
+
+1. Leave the VPC selection and Encryption Keys empty for the purpose of this workshop, and choose **Create notebook instance** to finish creation.
+    ![Notebook instance creation dialog](images/create-notebook-instance.png)
+
+1. You'll be returned to the list of notebooks, with the status of curren notebook shown as `Pending`. Wait till the status changes to `InService`, before proceeding to the next section.
+    ![Notebook instance creation status](images/notebook-instance-status.png)
+
+1. When the status of your notebook shows `InService`, click on the `Open Jupyter` link under `Actions` column to open the Jupyter Notebook on your instance and proceed to the following sections of this workshop.
+    ![Notebook instance ready](images/notebook-instance-ready.png)
+
+</p></details>
+
+
 1. If you do not have an IAM role created prior with all the necessary permissions needed for SageMaker to operate, create a new role on the fly.
 1. The IAM role you choose to use with the Notebook needs to be authorized to create ECR repository and upload an container image to the repository. 
 
