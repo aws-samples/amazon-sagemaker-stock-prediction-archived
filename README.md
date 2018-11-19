@@ -30,17 +30,22 @@ This workshop is not an exercise in statistical methods, neither does it attempt
 
 Since you will execute most of the workshop steps on a Jupyter Notebook hosted on SageMaker, start by creating a notebook instance on SageMaker from the AWS Console.
 
-Refer to the [AWS Region Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) to check the availability of SageMaker service, and choose to create the following infrastructure in any of the regions where it is available.
+Refer to the [AWS Region Table](https://docs.aws.amazon.com/general/latest/gr/rande.html#sagemaker_region) to check the availability of SageMaker service, and choose to create the following infrastructure in any of the regions where it is available.
 As of re:Invent-2018, SageMaker is available in the following regions:
 - us-east-1 (Northern Virgina)
 - us-east-2 (Ohio)
+- us-west-1 (California)
 - us-west-2 (Oregon)
+- ca-central-1 (Canada)
 - eu-west-1 (Ireland)
+- eu-west-2 (London)
 - eu-central-1 (Frankfurt)
 - ap-northeast-1 (Tokyo)
 - ap-northeast-2 (Seoul)
+- ap-southeast-1 (Singapore)
 - ap-southeast-2 (Sydney)
-
+- ap-south-1 (Mumbai)
+- us-gov-west-1 (AWS GovCloud)
 
 ### 1.1. Lifecycle configuration
 
