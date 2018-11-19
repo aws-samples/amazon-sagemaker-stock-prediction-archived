@@ -6,7 +6,7 @@ This sample code is made available under a modified MIT license. See the [LICENS
 
 ## Introduction
 
-This is a sample workshop that demonstrates how to use Neural Network based algorithm for time series prediction. The workshop uses stock market data maintained by Deutsche Börse under [Registry of open data](https://registry.opendata.aws/deutsche-boerse-pds/) on AWS. This dataset contains stock movement data from EU market, containing 100+ stocks, updated by the minute. Data is available strating from July 2016.
+This is a sample workshop that demonstrates how to use Neural Network based algorithm for time series prediction. The workshop uses stock market data maintained by Deutsche Börse under [Registry of open data](https://registry.opendata.aws/deutsche-boerse-pds/) on AWS. This dataset contains stock movement data from EU market, containing 100+ stocks, updated by the minute. Data is available starting from July 2016.
 
 Time series data can be analysed using a variety of techniques, ranging from a simple Multi Layer Perceptron, to a stacked Recurrent Neural Network, using forecasting methods such as Autoregressive Integrated Moving Average (ARIMA) or Exponential Smoothing (ETS). As a first attempt, we'll use a simple Recurrent Neural Network (RNN) model to predict the price of a single stock.
 
@@ -94,7 +94,7 @@ Configure this script to run on `Create notebook`.
 
 1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose of the workshop you can proceed without these mechanisms.
 
-### 1.3. Athena table
+<!-- ### 1.3. Athena table
 Athena allows you to query data directly from S3 buckets, using standard SQL compatible queries. Use the following DDLs to create external table in Athena, and a view containing the fields of interest. Using this view, you can then run queries directly on stock market data as stored in S3 buckets maintained by Deutsche Börse.
 
 Use the DDL provided below to create an Athena table, which currently wouldn't display any data, but you'll be able to run queries and generate QuickSight dashboard against this table once the following data preparation stage is completed.
@@ -194,7 +194,7 @@ Use the DDL provided below to create an Athena table, which currently wouldn't d
     FROM stockdata_daily AS stock
     ```
 
-</p></details>
+</p></details> -->
 
 ## 2. Data preparation
 
