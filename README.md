@@ -96,12 +96,11 @@ Configure this script to run on `Create notebook`.
 1. If you do not have an IAM role created prior with all the necessary permissions needed for SageMaker to operate, create a new role on the fly.
 
 1. The IAM role you choose to use with the Notebook needs to be authorized to create ECR repository and upload an container image to the repository. Therefore add the following permissions to the `IAM Role` that you'll be using for your Notebook instance:
-  - ecr:CreateRepository
-  - ecr:InitiateLayerUpload
-  - ecr:UploadLayerPart
-  - ecr:CompleteLayerUpload
-  - ecr:PutImage
-
+    - ecr:CreateRepository
+    - ecr:InitiateLayerUpload
+    - ecr:UploadLayerPart
+    - ecr:CompleteLayerUpload
+    - ecr:PutImage
 1. Optionally you can choose to place your instance within a VPC and encrypt all data to be used within notebook to be encrypted. For the purpose of the workshop you can proceed without these mechanisms.
 
 <details>
