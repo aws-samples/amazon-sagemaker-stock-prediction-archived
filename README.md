@@ -51,9 +51,6 @@ As of re:Invent-2018, SageMaker is available in the following regions:
 
 Lifecycle configurations are small bootup scripts, that you can use to automate certain tasks when a Notebook instance in being created and/or being started. For this workshop, create a startup script to download pre-built notebooks from this Github repository onto your notebook instance. 
 
-<details>
-<summary><strong>Create configuration (expand for details)</strong></summary><p>
-
 Configure this script to run on `Create notebook`.
 
   ```
@@ -66,12 +63,31 @@ Configure this script to run on `Create notebook`.
   mv amazon-sagemaker-stock-prediction/images SageMaker/fsv309-workshop/images/
   rm -rf amazon-sagemaker-stock-prediction
   sudo chmod -R ugo+w SageMaker/fsv309-workshop/
-  pip install --upgrade pip
-  pip install hdbscan
 
   ```
 
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console choose **Services** then select **Amazon SageMaker** under Machine Learning.
+
+1. Choose **Lifecycle configurations** under the section **Notebook** on the left panel.
+    ![Lifecycle configurations](images/lifecycle_configuration.png)
+
+1. Choose **Create configuration** to open the create dialog.
+
+1. Type the name `fsv309-lifecycle-config` in the `Name` field.
+
+1. In the tab **Create notebook**, type or copy-paste the `Create Notebook` script from above.
+    ![Create notebook script](images/lifecycle_configuration-create-notebook.png)
+
+1. Finish configuration by clicking **Create configuration**.
+
 </p></details>
+
+
+<b>Note:</b> If you niss to create a Lifecyle configuration or to attach the configuration to your Notebook instance, you can always run the above commands dircetly, into a Terminal window, from within your instance's Jupyter console.
+
 
 ### 1.2. Notebook instance
 1. Use the lifecycle configuration to create a Notebook instance in a region of your choice.
@@ -217,7 +233,7 @@ The insights above are useful becasue while predicting closing price of stocks, 
 
 As one would imagine individual stocks' movement doesn't exist in vaccuum. Often times, companies in related industries, or in similar businesses, follow similar pattern. IF we could find similar companies' stocks, it would allow us to use these other stocks as exogenous time series, while predicting a particular stock as main time series.
 
-Empirically we can assume that companies in similar industries, such as automobile or telecommunication industry would have some bearing on each others' price movements. In order to confirm this intuition, you can execute the code in [dbg-stock-clustering](notebooks/dbg-stock-clustering.ipynb) notebook, to have the similar stocks clustered, using the **HDBSCAN** algorithm.
+Empirically we can assume that companies in similar industries, such as automobile or telecommunication industry would have some bearing on each others' price movements. In order to confirm this intuition, you can execute the code in [dbg-stock-clustering](notebooks/dbg-stock-clustering.ipynb) notebook, to have the similar stocks clustered, using the [**HDBSCAN**](https://hdbscan.readthedocs.io) algorithm.
 
 Although clustering result may vary depending on the time period you choose while running the algorithm, and the similarity function you choose, for the stocks in this dataset, they should be clustered somewhat similarly as shown in the diagram below.
 
@@ -246,7 +262,7 @@ At a high level, you'll follow the plan as described in the session plan diagram
 
 As a first step, you'll use a custom RNN based algorithm, following the [dbg-custom-rnn](notebooks/dbg-custom-rnn.ipynb) notebook. Since the data preparation steps have already been completed in previous modules, you'll simply submit your model to SageMaker for training. Once trained, you'll deploy the model to generate predictions, forecast future stock values, and visualize within the notebook to see the performance of the model you deployed.
 
-Although it is possible to execute training using the compute available in your own Notebook instance, containerizing your coe and submitting to SageMaker for training has a number of advantages. Managed training and hosting services on SageMaker not only gives you flexibility of choosing the appropriately sized compute, it also ensures you only pay for what you actually use, Moreover, this approach makes it easier for data engineers to establish model pipelines by allowing them to automated these tasks in a repeatbale fashion.
+Although it is possible to execute training using the compute available in your own Notebook instance, containerizing your code and submitting to SageMaker for training has a number of advantages. Managed training and hosting services on SageMaker not only gives you flexibility of choosing the appropriately sized compute, it also ensures you only pay for what you actually use, Moreover, this approach makes it easier for data engineers to establish model pipelines by allowing them to automated these tasks in a repeatbale fashion.
 
 You can refer to [SageMaker build framework](https://github.com/aws-samples/aws-sagemaker-build) as a reference implementation of CI/CD framework for  automated build and deployment of machine learning models.
 
