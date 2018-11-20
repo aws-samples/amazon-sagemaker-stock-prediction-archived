@@ -344,3 +344,12 @@ In order to adopt the techniques you learn in this workshop to a real world use 
 
 You can now proceed to explore the final approach, of predicting stock price movements using DeepAR, following the code in the [dbg-deepar](notebooks/dbg-deepar.ipynb) notebook.
 
+## 5. Cleanup
+
+One advantage of using AWS for your Machine Learning pipeline is that you do not have to procure expensive infrastructure, and that you can spin up the resources just in time, and spin them down when not in use.
+
+In sections 3 and 4 of this workshop, you trained your model using hosted training job, during which SageMaker used instance of your type chosen only suring the time training job was running. After job finishes, the entry you see on SageMaker console, under `Training Jobs` is merely a record of the jobs that run, and doesn't comsume any resource. 
+
+However, the endpoints that you created by deploying your models in both cases resulted in long running resources, that in a production scenario you would use to serve your customers. In this case however, you have cleaned up the endpoints to avoid any cost overrun, by executing the last cell in respecting notebooks. In case you haven't done so, you can always delete the endpoints from SageMaker console, by selecting the endpoints displayed under `Endpoints` section, and choosing `Delete` Action.
+
+Lastly, the Notebook instance itself, can be and should be either stopped/terminated. If you choose to retain your work, you can simply visit the `Notebook instances` section in your SageMaker console, and stop the instance. You can always turn it back on later, and it will retain all of your work.
