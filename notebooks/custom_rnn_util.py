@@ -164,7 +164,7 @@ def plot_sample_predictions(predictor, filepaths, target_stock, target_column, l
         data = pd.read_csv(filepath , index_col = 0)
         test_main = data[data.Mnemonic == target_stock].copy()  
         given = test_main[target_column].iloc[0:-1]
-        given.plot(ax = axx[k], use_index=True)
+        given.plot(ax = axx[k], use_index=True, legend=True, label="Given")
         preds = predictor.predict(filepath).decode("utf-8").split()
         
         for i, pred in enumerate(preds):
@@ -174,7 +174,7 @@ def plot_sample_predictions(predictor, filepaths, target_stock, target_column, l
         predicted.index = given.index
         predicted = predicted.reset_index()
         axx[k].set_xticklabels(predicted['CalcDateTime'], rotation=90)
-        predicted[0].plot(ax = axx[k])
+        predicted[0].plot(ax = axx[k], legend=True, label="Predicted")
         
         
 # This function, given a data frame containing a set of data, and a predictor,
@@ -192,7 +192,7 @@ def plot_sample_test_performance(predictor, testdata, target_stock, covariate_st
     for k, testinput in enumerate(testinputs):
         test_main = testinput[testinput.Mnemonic == target_stock].copy()  
         given = test_main[target_column].iloc[0:-1]
-        given.plot(ax = axx[k], use_index=True)
+        given.plot(ax = axx[k], use_index=True, legend=True, label="Given")
         prediction = predictor.predict(testinput.to_csv())
         preds = prediction.decode("utf-8").split()
         
@@ -203,7 +203,7 @@ def plot_sample_test_performance(predictor, testdata, target_stock, covariate_st
         predicted.index = given.index
         predicted = predicted.reset_index()
         axx[k].set_xticklabels(predicted['CalcDateTime'], rotation=90)
-        predicted[0].plot(ax = axx[k])                
+        predicted[0].plot(ax = axx[k], legend=True, label="Predicted")                
         
         
 # This function, given a data frame containing a set of data, and a predictor,
@@ -220,7 +220,7 @@ def plot_overall_test_performance(predictor, testdata, target_stock, covariate_s
     target_stock_data = testdata[testdata.Mnemonic == target_stock].copy()
     
     given = target_stock_data[target_column]
-    ax = given.plot( ax = ax )
+    ax = given.plot( ax = ax, legend=True, label="Given" )
     ax.set_xticklabels(target_stock_data.index, rotation=90)
 
     for k, testinput in enumerate(testinputs):
@@ -232,7 +232,7 @@ def plot_overall_test_performance(predictor, testdata, target_stock, covariate_s
             
         predicted = target_stock_data[target_column].iloc[:k*inc+1+lag].append(pd.Series(preds))  
         predicted = predicted.reset_index()
-        predicted[0].plot(ax = ax)   
+        predicted[0].plot(ax = ax, legend=True, label="Predicted on {}".format(testinput.index[testinput.shape[0] - 1]))   
         
         
 # Given a data frame containing a set of data, this function generates a series of date values,
@@ -261,7 +261,7 @@ def predict_and_plot(predictor, testdata, forecast_date_index, target_stock, cov
     target_stock_data = testdata[testdata.Mnemonic == target_stock].copy()    
     
     given = target_stock_data[target_column]
-    ax = given.plot( ax = ax )
+    ax = given.plot( ax = ax, legend=True, label="Given" )
     ax.set_xticklabels(target_stock_data.index, rotation=90)    
     
     prediction = predictor.predict(testinput.to_csv())
@@ -272,5 +272,5 @@ def predict_and_plot(predictor, testdata, forecast_date_index, target_stock, cov
         
     predicted = target_stock_data[target_column].iloc[:forecast_date_index].append(pd.Series(preds))  
     predicted = predicted.reset_index()
-    predicted[0].plot(ax = ax)           
+    predicted[0].plot(ax = ax, legend=True, label="Predicted on {}".format(testinput.index[testinput.shape[0] - 1]))           
     
