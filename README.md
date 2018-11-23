@@ -16,9 +16,9 @@ Time series data can be analyzed using a variety of techniques, including a simp
 
 ![SageMaker](./images/sagemaker.png)
 
-In this workshop, we'll use Amazon SageMaker-hosted notebooks to fetch the data from Deutsche Börse dataset, clean it, and aggregate it in [Amazon S3](https://aws.amazon.com/s3/) buckets. We'll also use [Amazon Athena](https://aws.amazon.com/athena/) to query the data and [Amazon QuickSight](https://aws.amazon.com/quicksight/) to visualize the data. This will allow us to develop an intuition about the nature of the data.
+In this workshop, we'll first use Amazon SageMaker-hosted notebooks to fetch the data from Deutsche Börse dataset, clean it, and aggregate it in [Amazon S3](https://aws.amazon.com/s3/) buckets. 
 
-In addition to hosted notebooks, Amazon SageMaker also provides managed training and hosting for machine learning models, using a variety of languages and libraries. In our first attempt, we'll use this functionality to containerize the training and prediction code, publish it on an [Amazon Elastic Container Registry (Amazon ECR)](https://aws.amazon.com/ecr/) repository, and host our custom model behind an Amazon SageMaker endpoint to generate predictions.
+In addition to hosted notebooks, Amazon SageMaker also provides managed training and hosting for machine learning models, using a variety of languages and libraries. Once we've prepared the data and stored it in Amazon S3, we'll use this functionality to containerize the machine learning training and prediction code, publish it on an [Amazon Elastic Container Registry (Amazon ECR)](https://aws.amazon.com/ecr/) repository, and host our custom model behind an Amazon SageMaker endpoint to generate predictions.
 
 Amazon SageMaker also provides several built-in algorithms for image classification, regression, clustering of structured data, time series processing, and natural language processing. In the latter part of this workshop, we'll use [DeepAR](https://docs.aws.amazon.com/sagemaker/latest/dg/deepar.html), which is a supervised learning algorithm for forecasting one-dimensional time series using RNN.
 
